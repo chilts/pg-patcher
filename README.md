@@ -62,6 +62,15 @@ wrong on so many levels.
 
 Therefore, the only place the database patch level should be is in the database itself. This module does that.
 
+## Patch Files ##
+
+Patch files are just a set of statements that you'd like to perform on the database. These could be creation, altering,
+dropping of tables, functions, trigger or whatever else Postgres allows. It could also be adding application data to
+the database or manipulating various colums. It's entirely up to you.
+
+pg-patcher just makes sure that the ```property``` table is updated to the current patch level you specified, once all
+patches have been sucessfully applied.
+
 ## The First Forward and Reverse Patch ##
 
 The first patch ```patch-0-1.sql``` should create a property table and set the ```patch``` key to ```1```. The first
@@ -78,6 +87,18 @@ INSERT INTO property(key, value) VALUES('patch', 1);
 $ cat db/patch-1-0.sql
 DROP TABLE property;
 ```
+
+## All or Nothing (by using Transactions) ##
+
+Prior to patching, a new transaction is started. After patching it is committed. Therefore, every patch file you have
+asked to be performed will either succeed or fail. ie. if your database is currently at patch level 3 and you ask to
+move to patch level 7, then all of 3, 4, 5, 6 and 7 will succeed or none of them.
+
+Therefore, there is no need for you to add ```BEGIN``` or ```COMMIT``` statements in your patch files. pg-patcher will
+also make sure the property table contains the current patch level.
+
+Postgres is most wonderful since that DDL can be performed _within_ transactions, which means it's great for creating
+or altering tables, functions, triggers, whatever. This is why I love it.
 
 # Author #
 
