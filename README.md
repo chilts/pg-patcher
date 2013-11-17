@@ -50,7 +50,17 @@ var options = {
 };
 ```
 
-If you leave out ```opts``` completely, these defaults are set for you.
+If you leave out ```opts``` completely, these defaults are set for you. These two examples are equivalent:
+
+```
+pgpatcher(client, 2, function(err) {
+    // database is now patched to level 2
+});
+
+pgpatcher(client, 2, { dir : 'db', prefix : 'patch' }, function(err) {
+    // database is now patched to level 2
+});
+```
 
 ## Why this module? ##
 
