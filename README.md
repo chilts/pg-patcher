@@ -4,7 +4,7 @@ pg-patcher - A Postgres patch helper for node-postgres.
 
 ```
 var pg = require('pg');
-var pgpatcher = require('./index.js');
+var pgpatcher = require('pg-patcher');
 
 var client = new pg.Client({
     user     : 'mydb',
