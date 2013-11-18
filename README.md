@@ -116,7 +116,7 @@ pg-patcher also has a command line tool you can run from your ```package.json```
 
 ```
   "scripts": {
-    "db-patch": "pg-patcher --host localhost --database clubsonline --user clubsonline --level 2"
+    "db-patch": "pg-patcher --host localhost --database mydatabase --user myuser --level 2"
   }
 ```
 
