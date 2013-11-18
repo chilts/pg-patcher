@@ -14,7 +14,8 @@ var client = new pg.Client({
 client.connect(function(err) {
     pgpatcher(client, 2, function(err) {
         // database is now patched to level 2
-    }); 
+        client.end();
+    });
 });
 ```
 
@@ -122,6 +123,8 @@ pg-patcher also has a command line tool you can run from your ```package.json```
 
 This can be invoked with ```npm db-patch``` (or with the name of your choosing). However, you may want to place this in
 a separate script if you need to pass a password.
+
+You may pass any or all of these to the executable: database, user, password, port, host, ssl.
 
 # Author #
 

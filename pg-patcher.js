@@ -44,10 +44,11 @@ module.exports = function pgpatcher(client, level, opts, callback) {
             nextPatch,
             writeCurrentLevel,
             commit,
-            disconnect,
         ],
         function(err) {
-            if (err) return callback(err);
+            if (err) {
+                return callback(err);
+            }
             callback(null, currentPatchLevel);
         }
     );
@@ -132,7 +133,7 @@ module.exports = function pgpatcher(client, level, opts, callback) {
         }
 
         // make the filename
-        filename = opts.dir + '/' + opts.prefix + '-' + patch.from + '-' + patch.to + '.sql';
+        filename = opts.dir + '/' + patch.filename;
 
         // read the patch file
         fs.readFile(filename, { encoding : 'utf8' }, function(err, sql) {
@@ -156,11 +157,6 @@ module.exports = function pgpatcher(client, level, opts, callback) {
         else {
             process.nextTick(done);
         }
-    }
-
-    function disconnect(done) {
-        console.log('Disconnecting client ...');
-        client.end(done);
     }
 };
 

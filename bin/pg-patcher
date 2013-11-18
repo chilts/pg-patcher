@@ -19,7 +19,7 @@ var pgpatcher = require('../pg-patcher.js');
 // ----------------------------------------------------------------------------
 
 // ok, let's gather the arguments that have been given
-var args = ['database', 'user', 'password', 'port', 'host', 'ssl' ];
+var args = [ 'database', 'user', 'password', 'port', 'host', 'ssl' ];
 var config = {};
 args.forEach(function(cfg) {
     if ( argh.argv[cfg] ) {
@@ -43,6 +43,9 @@ client.connect(function(err) {
     }
 
     pgpatcher(client, argh.argv.level, opts, function(err, newLevel) {
+        // end the client no matter what
+        client.end();
+
         if (err) {
             return console.log('err:', err);
         }
