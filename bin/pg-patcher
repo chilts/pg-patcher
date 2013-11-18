@@ -1,0 +1,53 @@
+#!/usr/bin/env node
+// ----------------------------------------------------------------------------
+//
+// pg-patcher - command line program to patch Postgres databases.
+//
+// Copyright (c) 2013 Andrew Chilton. All Rights Reserved.
+//
+// License : MIT - http://chilts.mit-license.org/2013/
+//
+// ----------------------------------------------------------------------------
+
+// npm
+var argh = require('argh');
+var pg = require('pg');
+
+// local
+var pgpatcher = require('../pg-patcher.js');
+
+// ----------------------------------------------------------------------------
+
+// ok, let's gather the arguments that have been given
+var args = ['database', 'user', 'password', 'port', 'host', 'ssl' ];
+var config = {};
+args.forEach(function(cfg) {
+    if ( argh.argv[cfg] ) {
+        config[cfg] = argh.argv[cfg];
+    }
+});
+
+var client = new pg.Client(config);
+
+client.connect(function(err) {
+    if (err) {
+        return console.error('Could not connect to Postgres :', err);
+    }
+
+    var opts = {};
+    if ( argh.argv.dir ) {
+        opts.dir = argh.argv.dir;
+    }
+    if ( argh.argv.prefix ) {
+        opts.prefix = argh.argv.prefix;
+    }
+
+    pgpatcher(client, argh.argv.level, opts, function(err, newLevel) {
+        if (err) {
+            return console.log('err:', err);
+        }
+        console.log('Patched to level ' + newLevel);
+    });
+});
+
+// ----------------------------------------------------------------------------

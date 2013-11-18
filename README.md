@@ -110,6 +110,19 @@ also make sure the property table contains the current patch level.
 Postgres is most wonderful since that DDL can be performed _within_ transactions, which means it's great for creating
 or altering tables, functions, triggers, whatever. This is why I love it.
 
+## Command Line Tool ##
+
+pg-patcher also has a command line tool you can run from your ```package.json``` with ```npm run```:
+
+```
+  "scripts": {
+    "db-patch": "pg-patcher --host localhost --database clubsonline --user clubsonline --level 2"
+  }
+```
+
+This can be invoked with ```npm db-patch``` (or with the name of your choosing). However, you may want to place this in
+a separate script if you need to pass a password.
+
 # Author #
 
 Written by [Andrew Chilton](http://chilts.org/) - [Blog](http://chilts.org/blog/) -

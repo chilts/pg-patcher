@@ -47,7 +47,8 @@ module.exports = function pgpatcher(client, level, opts, callback) {
             disconnect,
         ],
         function(err) {
-            console.log('err:', err);
+            if (err) return callback(err);
+            callback(null, currentPatchLevel);
         }
     );
 
