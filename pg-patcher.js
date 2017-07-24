@@ -62,7 +62,7 @@ module.exports = function pgpatcher(client, level, opts, callback) {
                     return;
                 }
 
-                var parts = filename.split(/[-\.]/);
+                var parts = filename.split(/[-_\.]/);
                 var from = +parts[1];
                 var to   = +parts[2];
 
