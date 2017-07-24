@@ -20,6 +20,7 @@ var async = require('async');
 var defaults = {
     dir    : 'db',
     prefix : 'patch',
+    logger : function() {}, // noop
 };
 
 module.exports = function pgpatcher(client, level, opts, callback) {
@@ -30,6 +31,7 @@ module.exports = function pgpatcher(client, level, opts, callback) {
     }
 
     opts = xtend({}, defaults, opts);
+    var logger = opts.logger;
 
     var forwardPatch = {};
     var reversePatch = {};
@@ -83,21 +85,21 @@ module.exports = function pgpatcher(client, level, opts, callback) {
     }
 
     function begin(done) {
-        console.log('Beginning transaction ...');
+        logger('Beginning transaction ...');
         client.query("BEGIN", done);
     }
 
     function commit(done) {
-        console.log('Commiting transaction ...');
+        logger('Commiting transaction ...');
         client.query("COMMIT", done);
     }
 
     function getCurrentPatch(done) {
-        console.log('Getting current patch ...');
+        logger('Getting current patch ...');
         client.query("SELECT value FROM property WHERE key = 'patch'", function(err, res) {
             if (err) {
                 if ( '' + err === 'error: relation "property" does not exist' ) {
-                    console.log('Property table does not exist, patch level zero!');
+                    logger('Property table does not exist, patch level zero!');
                     currentPatchLevel = 0;
                     return done();
                 }
@@ -105,30 +107,30 @@ module.exports = function pgpatcher(client, level, opts, callback) {
             }
 
             currentPatchLevel = +res.rows[0].value;
-            console.log('* current patch is ' + currentPatchLevel);
+            logger('Current patch is ' + currentPatchLevel);
 
             done();
         });
     }
 
     function nextPatch(done) {
-        console.log('Patching to next level ...');
+        logger('Patching to next level ...');
 
         var tryLevel;
         var patch;
         if ( level > currentPatchLevel ) {
             tryLevel = currentPatchLevel + 1;
             patch = forwardPatch[tryLevel];
-            console.log(' * trying forward patch to ' + tryLevel);
+            logger('Trying forward patch to %s ...', tryLevel);
         }
         else if ( level < currentPatchLevel ) {
             tryLevel = currentPatchLevel - 1;
             patch = reversePatch[tryLevel];
-            console.log(' * trying reverse patch to ' + tryLevel);
+            logger('Trying reverse patch to %s ...', tryLevel);
         }
         else {
             // same, nothing to do
-            console.log(' * nothing to patch');
+            logger('No patching needed');
             return process.nextTick(done);
         }
 
@@ -149,12 +151,13 @@ module.exports = function pgpatcher(client, level, opts, callback) {
     }
 
     function writeCurrentLevel(done) {
-        console.log('Writing current patch level to database ...');
         // only write the if the patch level is greater than zero
         if ( currentPatchLevel > 0 ) {
+          logger('Writing current patch level %s to database ...', currentPatchLevel);
             client.query("UPDATE property SET value = $1 WHERE key = 'patch'", [ currentPatchLevel ], done);
         }
         else {
+            logger("Patch level 0 - no need to write this to the database");
             process.nextTick(done);
         }
     }
