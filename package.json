@@ -1,6 +1,6 @@
 {
   "name": "pg-patcher",
-  "description": "A Postgres patch helper for node-postgres.",
+  "description": "A Postgres patch helper for Postgres (using http://npmjs.com/pg).",
   "version": "0.3.0",
   "main": "pg-patcher.js",
   "bin": {
@@ -15,25 +15,20 @@
     "url": "https://github.com/chilts/pg-patcher/issues",
     "email": "andychilton@gmail.com"
   },
-  "author": {
-    "name": "Andrew Chilton",
-    "email": "andychilton@gmail.com",
-    "url": "http://chilts.org/"
-  },
   "dependencies": {
     "xtend": "~2.1.1",
     "async": "~0.2.9",
     "argh": "~0.1.1"
   },
-  "scripts": {
-    "test": "set -e; for FILE in test/*.js; do node $FILE; done"
+  "devDependencies": {
+    "pg": "^7.0.2"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/chilts/pg-patcher/raw/master/LICENSE"
-    }
-  ],
+  "author": {
+    "name": "Andrew Chilton",
+    "email": "andychilton@gmail.com",
+    "url": "https://chilts.org/"
+  },
+  "licenses": "MIT",
   "keywords": [
     "pg",
     "postgres",
