@@ -1,7 +1,7 @@
 {
   "name": "pg-patcher",
   "description": "A Postgres patch helper for Postgres (using http://npmjs.com/pg).",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "main": "pg-patcher.js",
   "bin": {
     "pg-patcher": "./bin/pg-patcher"
@@ -16,9 +16,9 @@
     "email": "andychilton@gmail.com"
   },
   "dependencies": {
-    "xtend": "~2.1.1",
-    "async": "~0.2.9",
-    "argh": "~0.1.1"
+    "argh": "~0.1.1",
+    "async": "^3.2.3",
+    "xtend": "~2.1.1"
   },
   "devDependencies": {
     "pg": "^7.0.2"
