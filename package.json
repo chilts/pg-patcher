@@ -1,7 +1,7 @@
 {
   "name": "pg-patcher",
   "description": "A Postgres patch helper for Postgres (using http://npmjs.com/pg).",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "main": "pg-patcher.js",
   "bin": {
     "pg-patcher": "./bin/pg-patcher"
