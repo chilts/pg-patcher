@@ -87,11 +87,13 @@ module.exports = function pgpatcher(client, level, opts, callback) {
     function begin(done) {
         logger('Beginning transaction ...');
         client.query("BEGIN", done);
+        logger('Beginning transaction ... done!');
     }
 
     function commit(done) {
         logger('Commiting transaction ...');
         client.query("COMMIT", done);
+        logger('Commiting transaction ... done!');
     }
 
     function getCurrentPatch(done) {
@@ -108,25 +110,24 @@ module.exports = function pgpatcher(client, level, opts, callback) {
 
             currentPatchLevel = +res.rows[0].value;
             logger('Current patch is ' + currentPatchLevel);
+            logger('Getting current patch ... done!');
 
             done();
         });
     }
 
     function nextPatch(done) {
-        logger('Patching to next level ...');
-
         var tryLevel;
         var patch;
         if ( level > currentPatchLevel ) {
             tryLevel = currentPatchLevel + 1;
             patch = forwardPatch[tryLevel];
-            logger('Trying forward patch to %s ...', tryLevel);
+            logger('Trying patch to %s ...', tryLevel);
         }
         else if ( level < currentPatchLevel ) {
             tryLevel = currentPatchLevel - 1;
             patch = reversePatch[tryLevel];
-            logger('Trying reverse patch to %s ...', tryLevel);
+            logger('Trying patch to %s ...', tryLevel);
         }
         else {
             // same, nothing to do
@@ -144,6 +145,7 @@ module.exports = function pgpatcher(client, level, opts, callback) {
 
                 // update the current patch level state
                 currentPatchLevel = tryLevel;
+                logger('Trying patch to %s ...', tryLevel, 'done!');
 
                 nextPatch(done);
             });
@@ -153,8 +155,9 @@ module.exports = function pgpatcher(client, level, opts, callback) {
     function writeCurrentLevel(done) {
         // only write the if the patch level is greater than zero
         if ( currentPatchLevel > 0 ) {
-          logger('Writing current patch level %s to database ...', currentPatchLevel);
+            logger('Writing current patch level %s to database ...', currentPatchLevel);
             client.query("UPDATE property SET value = $1 WHERE key = 'patch'", [ currentPatchLevel ], done);
+            logger('Writing current patch level %s to database ...', currentPatchLevel, 'done!');
         }
         else {
             logger("Patch level 0 - no need to write this to the database");
