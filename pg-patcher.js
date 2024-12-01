@@ -131,7 +131,7 @@ module.exports = function pgpatcher(client, level, opts, callback) {
         }
         else {
             // same, nothing to do
-            logger('No patching needed');
+            logger('No (more) patching needed');
             return process.nextTick(done);
         }
 
